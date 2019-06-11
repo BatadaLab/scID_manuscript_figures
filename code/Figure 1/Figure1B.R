@@ -60,49 +60,24 @@ get_stats <- function(gem, labels, logFC, markers = NULL) {
 # Using Hu 2017
 # ------------------------------------------------------------------------------------------------------------------------
 # Read data
-gem <- loadfast("~/Desktop/scID_benchmarking_datasets/data/snRNA_mammalian_brain/expression.txt")
-
-cell_info <- read.delim("~/Desktop/scID_benchmarking_datasets/data/snRNA_mammalian_brain/metadata.txt", stringsAsFactors = F, row.names = 1)
-labels <- cell_info$Cluster
-names(labels) <- rownames(cell_info)
-labels <- labels[-1]
-rm(cell_info)
+gem <- readRDS("~/scID_manuscript_figures/data/Figure1/Hu2017_gem.rds")
+labels <- readRDS("~/scID_manuscript_figures/data/Figure1/Hu2017_labels.rds")
 
 res_mamBrain <- get_stats(gem, labels, 0.3)
 
 # ------------------------------------------------------------------------------------------------------------------------
 # Using Shekhar 2016 data
 # ------------------------------------------------------------------------------------------------------------------------
-gem <- scID::loadfast("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/exp_matrix.txt")
-rownames(gem) <- toupper(rownames(gem))
-
-# Read labels of DropSeq data
-dropseq_groups <- read.delim("~/Google Drive/Data/singlecell/mice/shekhar2016_retina/clust_retinal_bipolar.txt", stringsAsFactors = F, header = T, row.names = 1)
-dropseq_groups <- dropseq_groups[-1, ]
-doublets <- rownames(dropseq_groups)[which(dropseq_groups$CLUSTER == "Doublets/Contaminants")]
-dropseq_groups <- dropseq_groups[setdiff(rownames(dropseq_groups), doublets), ]
-gem <- gem[, setdiff(colnames(gem), doublets)]
-labels <- dropseq_groups[colnames(gem), "CLUSTER"]
-names(labels) <- rownames(dropseq_groups)
+gem <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_gem.rds")
+labels <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_clusters.rds")
 
 res_Shekhar <- get_stats(gem, labels, 0.7)
 
 # -------------------------------------------------------------------------------------------------------------------------
 # Using Tirosh 2016
 # ------------------------------------------------------------------------------------------------------------------------
-gem <- scID::loadfast("~/Desktop/scID_benchmarking_datasets/data/melanoma_immunotherapy_res/tumors_tpm.txt")
-cell.info <- read.delim("~/Desktop/scID_benchmarking_datasets/data/melanoma_immunotherapy_res/tumors.nonmal_tsne_anno.txt", stringsAsFactors = F)
-cell.info <- cell.info[-1, ]
-labels <- cell.info$cell.type
-names(labels) <- cell.info$NAME
-# Remove generic T.cells
-labels <- labels[-which(labels == "T.cell")]
-
-common_cells <- intersect(names(labels), colnames(gem))
-labels <- labels[common_cells]
-gem <- gem[, common_cells]
-
-rm("common_cells", "cell.info")
+gem <- readRDS("~/scID_manuscript_figures/data/Figure1/Tirosh2016_gem.rds")
+labels <- readRDS("~/scID_manuscript_figures/data/Figure1/Tirosh2016_labels.rds")
 
 res_Tirosh <- get_stats(gem, labels, 0.5)
 
@@ -110,18 +85,8 @@ res_Tirosh <- get_stats(gem, labels, 0.5)
 # Using Montoro 2018
 # ------------------------------------------------------------------------------------------------------------------------
 # Read data
-gem <- read.delim("~/Desktop/scID_benchmarking_datasets/data/airway_epithelium/trachea_10x_log2TPM.txt", stringsAsFactors = F, row.names = 1)
-rnames <- toupper(rownames(gem))
-gem <- gem[-which(duplicated(rnames)), ]
-# Remove genes that are 0 across all cells
-gem <- gem[-which(rowSums(gem) == 0), ]
-
-cell_info <- read.delim("~/Desktop/scID_benchmarking_datasets/data/airway_epithelium/trachea_10x_metadata.txt", stringsAsFactors = F, row.names = 1)
-cell_info <- cell_info[-1, ]
-labels <- cell_info$cluster
-names(labels) <- rownames(cell_info)
-
-rm(rnames, cell_info)
+gem <- readRDS("~/scID_manuscript_figures/data/Figure1/Montoro2018_gem.rds")
+labels <- readRDS("~/scID_manuscript_figures/data/Figure1/Montoro2018_labels.rds")
 
 res_Montoro <- get_stats(gem, labels, 0.5)
 

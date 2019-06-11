@@ -11,20 +11,11 @@ source("~/scID_manuscript_figures/code/run_other_methods.R")
 # ------------------------------------------------------------------------------------------------------------------------
 # Read data
 # ------------------------------------------------------------------------------------------------------------------------
-Ds_gem <- loadfast("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/exp_matrix.txt")
+Ds_gem <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_gem.rds")
 rownames(Ds_gem) <- toupper(rownames(Ds_gem))
+identities <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_clusters.rds")
 
-ss2_gem <- loadfast("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/GSE80232_vsx2.RSEM.genes.tpm.matrix.filtered.txt")
-ss2_gem <- ss2_gem[, -grep("bulk", colnames(ss2_gem))]
-
-# Read labels of DropSeq data
-dropseq_groups <- read.delim("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/clust_retinal_bipolar.txt", stringsAsFactors = F, header = T, row.names = 1)
-dropseq_groups <- dropseq_groups[-1, ]
-doublets <- rownames(dropseq_groups)[which(dropseq_groups$CLUSTER == "Doublets/Contaminants")]
-dropseq_groups <- dropseq_groups[setdiff(rownames(dropseq_groups), doublets), ]
-
-Ds_gem <- Ds_gem[, setdiff(colnames(Ds_gem), doublets)]
-
+ss2_gem <- readRDS("~/scID_manuscript_figures/data/Figure2/Target_gem.rds")
 
 # ------------------------------------------------------------------------------------------------------------------------
 # Find markers of each cluster from DropSeq (Fig 4b left)
@@ -32,9 +23,6 @@ Ds_gem <- Ds_gem[, setdiff(colnames(Ds_gem), doublets)]
 so_ds <- CreateSeuratObject(counts = Ds_gem)
 so_ds <- NormalizeData(so_ds)
 so_ds <- ScaleData(so_ds)
-
-identities <- dropseq_groups[colnames(Ds_gem), "CLUSTER"]
-names(identities) <- colnames(Ds_gem)
 Idents(so_ds) <- factor(identities, levels = c("RBC (Rod Bipolar cell)", "MG (Mueller Glia)", "BC5A (Cone Bipolar cell 5A)", 
                                              "BC7 (Cone Bipolar cell 7)", "BC6", "BC5C", "BC1A", "BC3B", "BC1B", 
                                              "BC2", "BC5D", "BC3A", "BC5B", "BC4", "BC8/9 (mixture of BC8 and BC9)", 

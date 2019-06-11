@@ -10,20 +10,8 @@ library(scID)
 # ------------------------------------------------------------------------------------------------------------------------
 # Read data
 # ------------------------------------------------------------------------------------------------------------------------
-gem <- scID::loadfast("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/exp_matrix.txt")
-rownames(gem) <- toupper(rownames(gem))
-
-# Read labels of DropSeq data
-dropseq_groups <- read.delim("~/Google Drive/Data/singlecell/published/mice/shekhar2016_retina/clust_retinal_bipolar.txt", stringsAsFactors = F, header = T, row.names = 1)
-dropseq_groups <- dropseq_groups[-1, ]
-doublets <- rownames(dropseq_groups)[which(dropseq_groups$CLUSTER == "Doublets/Contaminants")]
-dropseq_groups <- dropseq_groups[setdiff(rownames(dropseq_groups), doublets), ]
-gem <- gem[, setdiff(colnames(gem), doublets)]
-labels <- dropseq_groups[colnames(gem), "CLUSTER"]
-names(labels) <- rownames(dropseq_groups)
-
-rm("dropseq_groups", "doublets")
-
+gem <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_gem.rds")
+labels <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_clusters.rds")
 
 # ------------------------------------------------------------------------------------------------------------------------
 # Find markers
@@ -33,14 +21,12 @@ gem <- gem[which(rowSums(gem) != 0), ]
 markers <- find_markers(gem, labels, 0.5, only.pos=FALSE, normalize_reference=FALSE)
 celltypes <- unique(markers$cluster)
 
-
 # ------------------------------------------------------------------------------------------------------------------------
 # binarize gem
 # ------------------------------------------------------------------------------------------------------------------------
 sink("aux");
 binned_gem <- apply(gem, 1, function(x) biomod2::BinaryTransformation(x, threshold = quantile(x[which(x>0)], 0.25, na.rm = TRUE)))
 sink(NULL);
-
 
 # ------------------------------------------------------------------------------------------------------------------------
 # Calculate TPR and FPR of Stage 2 and Stage 3 for all cell types
