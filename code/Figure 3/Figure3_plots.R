@@ -24,7 +24,6 @@ E18_nuclei_cpm <- counts_to_cpm(E18_nuclei)
 colnames(E18_nuclei_cpm) <- paste(colnames(E18_nuclei_cpm), "nuc", sep = "_")
 colnames(E18_nuclei) <- paste(colnames(E18_nuclei), "nuc", sep = "_")
 
-
 # ------------------------------------------------------------------------------------------------------------------------
 # Cluster E18_9k dataset with Seurat
 # ------------------------------------------------------------------------------------------------------------------------
