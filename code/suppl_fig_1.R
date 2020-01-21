@@ -42,7 +42,8 @@ scID_celseq2_ARI <- mclust::adjustedRandIndex(scID_celseq2_labels[names(which(sc
 # Compare weights and accuracy of scID using the Smart-Seq2 dataset as reference and the celseq datasets as targets
 common_celltypes <- intersect(names(celseq_res$estimated_weights), names(celseq2_res$estimated_weights))
 correlations <- c()
-
+p_values <- c() 
+pdf("~/ownCloud/DocSyncUoE/Thesis/thesis_full/chapter2/chapter/figs/pancreatic_correlations.pdf", width = 8, height = 6)
 par(mfrow=c(3,4))
 for (celltype in common_celltypes) {
   
@@ -51,10 +52,11 @@ for (celltype in common_celltypes) {
   
   common_genes <- intersect(names(w1), names(w2))
   
-  c <- cor(w1[common_genes], w2[common_genes], method = "spearman")
-  correlations <- c(correlations, c)
+  c <- cor.test(w1[common_genes], w2[common_genes], method = "spearman")
+  correlations <- c(correlations, c$estimate)
+  p_values <- c(p_values, c$p.value)
   plot(w1[common_genes], w2[common_genes], pch=16, xlab = "Weights from CEL-Seq", ylab = "Weights from CEL-Seq2", 
-       main = sprintf("%s - cor=%s", celltype, round(c,2)))
+       main = sprintf("%s - cor=%s \np-val=%s", celltype, round(c$estimate,2), c$p.value))
 }
 dev.off()
 names(correlations) <- common_celltypes

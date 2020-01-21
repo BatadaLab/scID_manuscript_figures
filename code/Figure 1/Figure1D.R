@@ -10,7 +10,7 @@ gem <- readRDS("~/scID_manuscript_figures/data/Figure1/Tirosh2016_gem.rds")
 labels <- readRDS("~/scID_manuscript_figures/data/Figure1/Tirosh2016_labels.rds")
 
 scID_output <- scid_multiclass(target_gem = gem, reference_gem = gem, reference_clusters = labels, 
-                               logFC = 0.5, only_pos = T, estimate_weights_from_target = T)
+                               logFC = 0.7, only_pos = T, estimate_weights_from_target = T)
 scID_labels <- scID_output$labels
 
 ARI[1] <- mclust::adjustedRandIndex(labels[names(which(scID_labels != "unassigned"))], scID_labels[names(which(scID_labels != "unassigned"))])
@@ -34,7 +34,7 @@ gem <- readRDS("~/scID_manuscript_figures/data/Figure1/Hu2017_gem.rds")
 labels <- readRDS("~/scID_manuscript_figures/data/Figure1/Hu2017_labels.rds")
 
 scID_output <- scid_multiclass(target_gem = gem, reference_gem = gem, reference_clusters = labels, 
-                               logFC = 0.3, estimate_weights_from_target = T, only_pos = T)
+                               logFC = 0.4, estimate_weights_from_target = T, only_pos = T)
 scID_labels <- scID_output$labels
 
 ARI[3] <- mclust::adjustedRandIndex(labels[names(which(scID_labels != "unassigned"))], scID_labels[names(which(scID_labels != "unassigned"))])
@@ -46,7 +46,7 @@ gem <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_gem.rds")
 labels <- readRDS("~/scID_manuscript_figures/data/Figure2/Reference_clusters.rds")
 
 scID_output <- scid_multiclass(target_gem = gem, reference_gem = gem, reference_clusters = labels, 
-                               logFC = 0.7, estimate_weights_from_target = T, only_pos = T)
+                               logFC = 0.8, estimate_weights_from_target = T, only_pos = T)
 scID_labels <- scID_output$labels
 
 ARI[4] <- mclust::adjustedRandIndex(labels[names(which(scID_labels != "unassigned"))], scID_labels[names(which(scID_labels != "unassigned"))])

@@ -37,10 +37,10 @@ Idents(sobj_9k) <- factor(reference_clusters)
 sobj_9k <- RunTSNE(sobj_9k)
 
 # Figure 3A left
-TSNEPlot(sobj_9k, do.label = T, pt.size = 0.05, no.axes = T, no.legend = T)
+TSNEPlot(sobj_9k, do.label = T, pt.size = 0.05) + NoLegend() + NoAxes()
 
 # Find markers
-markers <- FindAllMarkers(sobj_9k, only.pos = F, test.use = "MAST", logfc.threshold = 0.6, do.print = FALSE)
+markers <- FindAllMarkers(sobj_9k, only.pos = F, test.use = "MAST", logfc.threshold = 0.6)
 positive_markers <- markers[which(markers$avg_logFC > 0), ]
 celltypes <- unique(Idents(sobj_9k))
 
